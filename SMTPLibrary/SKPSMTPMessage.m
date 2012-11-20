@@ -86,6 +86,7 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
         
         // by default, validate the SSL chain
         validateSSLChain = YES;
+        testConnection=NO;
     }
     
     return self;
@@ -230,6 +231,11 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
     return YES;
 }
 
+-(void)testConnection{
+    self.parts=[[NSArray alloc]init];
+	testConnection=YES;
+    [self send];
+}
 
 - (BOOL)send
 {
@@ -664,8 +670,15 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
                 
                 case kSKPSMTPWaitingAuthSuccess:
                 {
+  
+                    
                     if ([tmpLine hasPrefix:@"235 "])
                     {
+                        if (testConnection) {
+                            [self.delegate messageTestSucceeded:self];
+                            [self cleanUpStreams];
+                            return;
+                        }
                         sendState = kSKPSMTPWaitingFromReply;
                         
                         NSString *mailFrom = server8bitMessages ? [NSString stringWithFormat:@"MAIL FROM:<%@> BODY=8BITMIME\r\n", fromEmail] : [NSString stringWithFormat:@"MAIL FROM:<%@>\r\n", fromEmail];

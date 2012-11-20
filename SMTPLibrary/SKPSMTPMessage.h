@@ -71,6 +71,7 @@ extern NSString *kSKPSMTPPartContentTransferEncodingKey;
 
 -(void)messageSent:(SKPSMTPMessage *)message;
 -(void)messageFailed:(SKPSMTPMessage *)message error:(NSError *)error;
+-(void)messageTestSucceeded:(SKPSMTPMessage *)message;
 
 @end
 
@@ -114,6 +115,8 @@ extern NSString *kSKPSMTPPartContentTransferEncodingKey;
     
     NSTimer *connectTimer;
     NSTimer *watchdogTimer;
+    
+    BOOL testConnection;
 }
 
 @property(nonatomic, retain) NSString *login;
@@ -137,5 +140,6 @@ extern NSString *kSKPSMTPPartContentTransferEncodingKey;
 @property(nonatomic, assign) id <SKPSMTPMessageDelegate> delegate;
 
 - (BOOL)send;
+- (void)testConnection;
 
 @end
